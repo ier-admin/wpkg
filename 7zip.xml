@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<packages>
+	<package
+		id='7zip'
+		name='7-Zip'
+		revision='6.0'
+		reboot='false'
+		priority='10' >
+
+		<!-- download url="https://www.7-zip.org/download.html" -->
+
+		<variable name="MAINVERSION" value="19" />
+		<variable name="VERSION" value="%MAINVERSION%.00" />
+		<variable name="FILEVERSION" value="%MAINVERSION%00" />		
+		<variable name="DETAILEDVERSION" value="%VERSION%.00.0" />
+		
+		<check type='uninstall' condition='versiongreaterorequal' path='7-Zip %VERSION% (x64 edition)' value='%DETAILEDVERSION%' />
+		
+ 		<install cmd="taskkill /F /IM 7zFM.exe">
+			<exit code="any" />
+		</install>
+
+		<!-- If you do a .msi based install without first uninstalling the .exe version it will leave some files from the .exe based install intact as well as an entry in "Add/Remove Programs". -->
+		<install cmd='%COMSPEC% /C IF EXIST "%PROGRAMFILES%\7-Zip\Uninstall.exe" "%PROGRAMFILES%\7-Zip\Uninstall.exe" /S' />
+		<install cmd='msiexec /i "%SOFTWARE%\7zip\7z%FILEVERSION%-x64.msi" /qn' />
+		<!-- for file extensions to be assigned to 7-Zip:  -->
+		<install cmd='"%SOFTWARE%\7zip\7zext.bat">nul'><exit code="any"/></install>
+
+		<upgrade include='install' />
+
+ 		<remove cmd="taskkill /F /IM 7zFM.exe">
+			<exit code="any" />
+		</remove>
+		<remove cmd='msiexec /x {23170F69-40C1-2702-1805-000001000000} /qn' />
+	 </package>
+</packages>
